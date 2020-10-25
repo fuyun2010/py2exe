@@ -6,44 +6,16 @@ environment:
   LIB: "C:\\Program Files\\Microsoft SDKs\\Windows\\v7.0\\lib;C:\\Program Files (x86)\\Microsoft Visual Studio 14.0\\VC\\lib;C:\\Program Files (x86)\\Windows Kits\\10\\lib;C:\\Program Files (x86)\\Windows Kits\\10\\Lib\\10.0.10586.0\\ucrt\\x86"
   
   matrix:
-    -  PYTHON: "C:\\Python38-x64"
-       SDIST: yes
-
-    -  PYTHON: "C:\\Python35"
-       PYTHON_VERSION: 3.5
-       PYTHON_ARCH: 32
-
-    -  PYTHON: "C:\\Python36"
-       PYTHON_VERSION: 3.6
-       PYTHON_ARCH: 32
-
-    -  PYTHON: "C:\\Python37"
-       PYTHON_VERSION: 3.7
-       PYTHON_ARCH: 32
-
-    -  PYTHON: "C:\\Python38"
-       PYTHON_VERSION: 3.8
-       PYTHON_ARCH: 32
-
-    -  PYTHON: "C:\\Python35-x64"
-       PYTHON_VERSION: 3.5
-       PYTHON_ARCH: 64
-
-    -  PYTHON: "C:\\Python36-x64"
-       PYTHON_VERSION: 3.6
-       PYTHON_ARCH: 64
-
-    -  PYTHON: "C:\\Python37-x64"
-       PYTHON_VERSION: 3.7
-       PYTHON_ARCH: 64
-
-    -  PYTHON: "C:\\Python38-x64"
-       PYTHON_VERSION: 3.8
+    -  PYTHON: "C:\\Python39-x64"
+       PYTHON_VERSION: 3.9
        PYTHON_ARCH: 64
 
 configuration: Release
 
 init:
+  - curl -L https://www.python.org/ftp/python/3.9.0/python-3.9.0-amd64.exe -o python-3.9.0-amd64.exe
+  - cmd /c start /wait python-3.9.0-amd64.exe /quiet TargetDir="C:\Python39-x64" Shortcuts=0 Include_launcher=1 InstallLauncherAllUsers=1 Include_debug=0
+  - del python-3.9.0-amd64.exe
   - set PYTHONPATH=%PYTHON%
   - set PYTHONHOME=%PYTHON%
   - set PATH=%PYTHON%;%PYTHON%\Scripts;%PATH%
@@ -54,78 +26,13 @@ init:
   - python -m pip install -U cachetools pefile
 
 for:
-  -
+  -     
     matrix:
       only:
-        - SDIST: yes
-    install:
-        - python setup.py sdist
-    test_script:
-        - dir dist
-
-  - 
-    matrix:
-      only:
-        - PYTHON_VERSION: 3.5
-          PYTHON_ARCH: 32
-    install:
-        - python setup.py bdist_wheel --python-tag cp35 --plat-name win32
-
-  - 
-    matrix:
-      only:
-        - PYTHON_VERSION: 3.6
-          PYTHON_ARCH: 32
-    install:
-        - python setup.py bdist_wheel --python-tag cp36 --plat-name win32
-
-  - 
-    matrix:
-      only:
-        - PYTHON_VERSION: 3.7
-          PYTHON_ARCH: 32
-    install:
-        - python setup.py bdist_wheel --python-tag cp37 --plat-name win32
-        
-  - 
-    matrix:
-      only:
-        - PYTHON_VERSION: 3.8
-          PYTHON_ARCH: 32
-    install:
-        - python setup.py bdist_wheel --python-tag cp38 --plat-name win32
-        
-  - 
-    matrix:
-      only:
-        - PYTHON_VERSION: 3.5
+        - PYTHON_VERSION: 3.9
           PYTHON_ARCH: 64
     install:
-        - python setup.py bdist_wheel --python-tag cp35 --plat-name win_amd64
-
-  - 
-    matrix:
-      only:
-        - PYTHON_VERSION: 3.6
-          PYTHON_ARCH: 64
-    install:
-        - python setup.py bdist_wheel --python-tag cp36 --plat-name win_amd64
-
-  - 
-    matrix:
-      only:
-        - PYTHON_VERSION: 3.7
-          PYTHON_ARCH: 64
-    install:
-        - python setup.py bdist_wheel --python-tag cp37 --plat-name win_amd64
-
-  -
-    matrix:
-      only:
-        - PYTHON_VERSION: 3.8
-          PYTHON_ARCH: 64
-    install:
-        - python setup.py bdist_wheel --python-tag cp38 --plat-name win_amd64
+        - python setup.py bdist_wheel --python-tag cp39 --plat-name win_amd64
 
 # Not a project with an msbuild file, build done at install.
 build: off
